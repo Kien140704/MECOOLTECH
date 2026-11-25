@@ -65,21 +65,45 @@
   calculate();
 })();
 
-const quoteForm = document.getElementById("quote-form");
-const SCRIPT_URL = "https://script.google.com/macros/library/d/1B3ZJ_pRIxAdogd-FPWZTPU9WpvEtvRNzv7H_HXMBvRMS8A4YR_JsdH5C/2";
-  document.getElementById("lead-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    await fetch(SCRIPT_URL, { method: "POST", body: new FormData(form), mode: "no-cors" });
-    alert("Cảm ơn bạn, chúng tôi sẽ liên hệ sớm!");
-    form.reset();
-  });
-if (quoteForm) {
-  quoteForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+const SCRIPT_URL =
+  "https://script.google.com/macros/library/d/1B3ZJ_pRIxAdogd-FPWZTPU9WpvEtvRNzv7H_HXMBvRMS8A4YR_JsdH5C/2";
+
+async function submitLeadForm(form) {
+  const submitButton = form.querySelector('[type="submit"]');
+  const originalText = submitButton ? submitButton.innerHTML : "";
+
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.innerHTML = "Đang gửi...";
+  }
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: new FormData(form),
+      mode: "no-cors",
+    });
+
     alert(
       "Cảm ơn Quý khách! Đội ngũ MeCoolTech sẽ liên hệ tư vấn và gửi bảng dự toán chi tiết trong 15 phút.",
     );
-  });
+    form.reset();
+  } catch (error) {
+    console.error("Không thể gửi yêu cầu:", error);
+    alert("Gửi yêu cầu chưa thành công. Vui lòng thử lại hoặc gọi hotline 091 642 9993.");
+  } finally {
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.innerHTML = originalText;
+    }
+  }
 }
 
+const quoteForm = document.getElementById("quote-form");
+
+if (quoteForm) {
+  quoteForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    submitLeadForm(quoteForm);
+  });
+}
