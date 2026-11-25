@@ -66,12 +66,20 @@
 })();
 
 const quoteForm = document.getElementById("quote-form");
-
+const SCRIPT_URL = "https://script.google.com/macros/library/d/1B3ZJ_pRIxAdogd-FPWZTPU9WpvEtvRNzv7H_HXMBvRMS8A4YR_JsdH5C/2";
+  document.getElementById("lead-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    await fetch(SCRIPT_URL, { method: "POST", body: new FormData(form), mode: "no-cors" });
+    alert("Cảm ơn bạn, chúng tôi sẽ liên hệ sớm!");
+    form.reset();
+  });
 if (quoteForm) {
   quoteForm.addEventListener("submit", (event) => {
     event.preventDefault();
     alert(
-      "Cảm ơn Quý khách! Kỹ sư trưởng MeCoolTech sẽ liên hệ tư vấn và gửi bảng dự toán chi tiết trong 15 phút.",
+      "Cảm ơn Quý khách! Đội ngũ MeCoolTech sẽ liên hệ tư vấn và gửi bảng dự toán chi tiết trong 15 phút.",
     );
   });
 }
+
